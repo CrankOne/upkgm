@@ -1,0 +1,68 @@
+---
+manifest-api-version: 0.1
+
+name: sci-phys/StromaV
+version: 0.1.7a
+homepage: https://github.com/CrankOne/StromaV
+
+# This is an example Package Declaration File claiming a specification
+# variant for packages management microsystem proposed within a Q-Crypt
+# foundation at Oct 2017.
+comments:
+    brief: >
+        The StromaV package is designed as a supporting framework for
+        scientific experiments in High Energy Physics of samll and medium
+        scale.
+    extended: >
+        The StromaV provides few software solutions glueing together
+        Monte-Carlo provided by Geant4 framework and ROOT data anlysis
+        framework while offering a conventions for simplified creation of data
+        treatment pipeline based on Google Protobuf messages data structures.
+
+build-systems:
+    - class: CMake
+      version: >=2.6
+      options:
+          - name: CMAKE_INSTALL_PREFIX
+            means: this.install-prefix
+            type: path  # optional for referred entities, like sys.whatever
+          - name: Goo_DIR
+            means: sys.pkg[dev-cpp/goo].install-prefix
+            type: path
+            # ^^^^^^^^ optional since the package had defined this variable
+            # as path type already
+          - name: GenFit_DIR
+            means: pkg[sci-phys/GenFit].install-prefix
+          - name: ext.gdml_DIR
+            means: sys.pkg[sci-phys/ext\.gdml].install-prefix
+          - name: GEANT4_MC_MODEL
+            means: this.feature[global]  # indicates, that this is a global "useflag"
+            type: bool
+          - name: GEANT4_DYNAMIC_PHYSICS
+            means: this.feature[local]  # indicates, that this is a local "useflag"
+            type: bool
+            # ...
+    - class: pip
+
+deps:
+    # The Goo library is an obligatory dependency. The sV package is
+    # completely based on top of it. Here we require Goo of any version
+    # being installed.
+    - pkg-name: dev-cpp/goo
+    # traits: persistent, static, required are set by default.
+    # ROOT is an obligatorey dependency. The sV package can not be built
+    # without it. We require the ROOT being of 6 or above major versions here:
+    - pkg-name: >=sci-phys/root-6
+    # The Geant4 is an optional dependency that enables various MC
+    # functionality of sV, that can be omitted in case when only analysis
+    # routines are needed:
+    - pkg-name: >=sci-phys/geant-4
+      provides: mc  # causes optional be set by default
+      # + persistent, static set by default
+    # The SWIG is required only to generate the wrapper code
+    - pkg-name: swig
+      traits: temporary, optional  # + static, set by default
+
+...
+
+
