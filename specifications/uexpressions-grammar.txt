@@ -1,0 +1,39 @@
+
+expression ::= identifiers
+             ;
+
+identifiers::= identifier
+             | identifier '.' identifiers
+             ;
+
+identifier ::= STR
+             | STR '[' selectors ']'
+             ;
+
+selectors  ::= selector
+             | selector ',' selectors
+             ;
+
+selector   ::= propName comparOp propValue
+             | propValue '<' propName '<' propValue
+             | propValue '<=' propName '<' propValue
+             | propValue '<' propName '<=' propValue
+             | propValue '<=' propName '<=' propValue
+             ;
+
+propName   ::= STR
+             ;
+
+propValue  ::= STR
+             | VERSION_STR
+             | INTEGER
+             | FLOAT
+             ... (other literal types)
+             ;
+
+comparOp   ::= '=' | '<>'
+             | '<' | '>'
+             | '<=' | '>='
+             | '=~'
+             ;
+
