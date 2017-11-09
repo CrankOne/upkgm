@@ -19,20 +19,25 @@ comments:
         framework while offering a conventions for simplified creation of data
         treatment pipeline based on Google Protobuf messages data structures.
 
-modules:
+pipeline:
+    # Each entry of this array of objects refers to particular back-end module.
+    # They will be invoked in order:
     - class: CMake
       version: >=2.6
       options:
-          - name: CMAKE_INSTALL_PREFIX
-            means: my.install-prefix
-            type: path  # optional for referred entities, like whatever
+          #- name: CMAKE_INSTALL_PREFIX
+          #  means: my.install-prefix
+          #  type: path  # optional for referred entities, like whatever
+          # ^^^ You may or may not provide the usual CMake options like
+          # CMAKE_INSTALL_PREFIX They will be provided by back-end module
+          # automatically.
           - name: Goo_DIR
-            means: pkgs[name=goo].install-prefix
+            means: deps[name=goo].install-prefix  # note the deps[] object here
             type: path
             # ^^^^^^^^ optional since the package had defined this variable
             # as path type already
           - name: GenFit_DIR
-            means: pkgs[name=GenFit].install-prefix
+            means: deps[name=GenFit].install-prefix
           - name: ext.gdml_DIR
             means: pkgs[name=ext\.gdml].install-prefix
           - name: GEANT4_MC_MODEL
@@ -61,7 +66,7 @@ deps:
       # + persistent, static set by default
     # The SWIG is required only to generate the wrapper code
     - pkg-name: swig
-      traits: temporary, optional  # + static, set by default
+      traits: temporary, optional  # + static, set by defaul
 
 ...
 

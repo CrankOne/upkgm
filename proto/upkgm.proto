@@ -1,0 +1,78 @@
+syntax = "proto3"
+
+package upkgm.manifest
+
+message Package {
+    // THIS OPTIONS ARE USUALLY SET BY MANIFEST DIRECTLY
+    Version apiVersion = 1;
+    string name = 3;
+    string homepage = 5;
+    string srcURI = 6;
+    message Comments {
+        string brief = 1;
+        string details = 3;
+    }
+    repeated Stage stages = 9;
+    repeated Dependency deps = 11;
+    // THIS OPTIONS MAY BE REFERRED
+    repeated string tags = 13;
+    string license = 15;
+    message Paths {
+        string sources = 1;
+        string build = 3;
+        string install = 5;
+    }
+}
+
+message Version {
+    int32 major;
+    int32 minor;
+    int32 third;  // used only for triplets.
+    string revision;  // TODO: enum?
+}
+
+//message VersionRange {
+//    repeated Version Include = 1;
+//    repeated Version Exclude = 3;
+//    repeated message ExcludeRange = 5;
+//    repeated message IncludeRange = 7;
+//    ...
+//}
+
+message Stage {
+    string baseClassName = 1;
+    string flavorName = 3;  // TODO: consider aspects like CMake-Cpp / CMake-SWIG
+    repeated StageOption options = 5;
+    // TODO: any additional information for particular stage info to be put
+    // here for further processing by the appropriate back-end.
+}
+
+message StageOption {
+    string name = 1;
+    message OptionTypeMsg {
+        enum OptionTypeCode {
+            ANY   = 0,
+            BOOL  = 1,
+            INT   = 2,
+            FLOAT = 3,
+            PATH  = 4
+            // ... whatever else (see design document)
+        }
+    }
+    string meaningExpression = 5;  // TODO: usually refers to package property
+    // ^^^ NOTE see: https://stackoverflow.com/questions/35047392/getting-all-field-names-from-a-protocol-buffer-in-c
+    // We could actually pre-build message expression here even within C++.
+    string description = 7;
+}
+
+message Dependency {
+    string nameExpression = 1;  // may be a complex expression referring versions range
+    // VersionRange appliableVersions = 2;
+    repeated string provides = 3;
+    repeated enum Traits {
+        TEMPORARY_DEP,
+        OPTIONAL_DEP
+        // ... whatever else (see design document)
+    }
+}
+

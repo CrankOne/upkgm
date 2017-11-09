@@ -1,0 +1,54 @@
+<upkgm-manifest
+    api-version="0.1"
+    pkg-name="StromaV"
+    pkg-ver="0.1.7.a">
+
+    <comment-brief>
+        The StromaV package is designed as a supporting framework for
+        scientific experiments in High Energy Physics of samll and medium
+        scale.
+    </comment-brief>
+
+    <comment-detailed>
+        The StromaV provides few software solutions glueing together
+        Monte-Carlo provided by Geant4 framework and ROOT data anlysis
+        framework while offering a conventions for simplified creation of data
+        treatment pipeline based on Google Protobuf messages data structures.
+    </comment-detailed>
+
+    <pipeline>
+        <stage inherit-class="CMake">
+            <version> >=2.6 </version>
+            <options>
+                <option name="Goo_DIR" type="path">
+                    deps[name=goo].install-prefix
+                </option>
+                <option name="ext.gdml_DIR" type="path">
+                    deps[name=ext\.gdml].install-prefix
+                </option>
+                <option name="ext.gdml_DIR" type="path">
+                    deps[name=ext\.gdml].install-prefix
+                </option>
+                <option name="GEANT4_MC_MODEL" type="bool">
+                    my.feature[alias=mc]
+                </option>
+                <option name="GEANT4_DYNAMIC_PHYSICS" type="bool">
+                    my.feature
+                </option>
+            </options>
+        </stage>
+        <stage inherit-class="pip"></stage>
+    </pipeline>
+
+    <deps>
+        <package name="dev-cpp/goo"/>
+        <package name=">=sci-physics/root-6"/>
+        <package name=">=sci-physics/geant-4.10">
+            <provides>mc</provides>
+        </package>
+        <package name="swig">
+            <trait>temporary</trait>
+            <trait>optional</trait>
+        </package>
+    </deps>
+</upkgm-manifest>
